@@ -1,13 +1,23 @@
-import Courses from "../components/Courses.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Note from "../components/Note.jsx";
-import note from "../components/Note.jsx";
 
-const App = (props) => {
-    //const { notes } = props
-    const [notes, setNotes] = useState(props.notes)
+const App = () => {
+    const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('Afegir nova nota...')
     const [showAll, setShowAll] = useState(true)
+
+    //Agafam dades del servidor amb el primer renderitzat i les guardam a l'estat
+    useEffect(() => {
+        console.log('effect a app')
+
+        fetch('http://localhost:3001/notes')
+            .then(response =>  response.json())
+            .then(data => {
+                console.log(data)
+                setNotes(data)
+            })
+    }, [])
+    console.log('render', notes.length, 'notes')
 
     const addNote = (e) => {
         e.preventDefault()
