@@ -1,18 +1,24 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Filter from "./components/Filter.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Persons from "./components/Persons.jsx";
 
 const App = () => {
-    const [ persons, setPersons ] = useState([
-        {
-            name: 'Arto Hellas',
-            number: '39-44-6565652'
-        }
-    ])
+    const [ persons, setPersons ] = useState([ ])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ filterName, setFilterName ] = useState('')
+
+    useEffect(() => {
+        console.log('effect a App')
+        fetch('http://localhost:3001/persons')
+            .then(response => response.json())
+            .then(data => {
+                console.log('data: ', data)
+                setPersons(data)
+            })
+    }, [])
+    console.log('render ', persons.length, ' persons')
 
     const handleChangeFilterName = (e) => {
         setFilterName(e.target.value)
