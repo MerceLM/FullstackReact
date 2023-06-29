@@ -52,16 +52,15 @@ function App() {
                     <p>Population: {pais.population}</p>
                     <h3>Languages</h3>
                     <ul>{idiomes.map(pa => <li key={pa}>{pa}</li>)}</ul>
-                    <img width="200px"  key="bandera" src={pais.flags.svg} />
+                    <img alt="flag" width="200px"  key="bandera" src={pais.flags.svg} />
                 </Fragment>
             )
 
         }else {
-
-            return fr.map(c =>
+            return fr.map((c, index) =>
                 <Fragment>
-                    <div key={c.name.common}>
-                        {c.name.common} <button type="text" value={c.name.common} onClick={seleccionarPais} name="veurePaisBt">Show</button>
+                    <div key={index}>
+                        {c.name.common} <button key={c.ccn3} type="text" value={c.name.common} onClick={seleccionarPais} name="veurePaisBt">Show</button>
                     </div>
                 </Fragment>
             )
