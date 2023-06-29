@@ -5,6 +5,7 @@ function App() {
     const [countries, setCountries] = useState([])
     const [filterResult, setFilterResult] = useState([])
     const [filter, setFilter] = useState('')
+    const [paisShow, setPaisShow] = useState([])
 
     useEffect(() => {
         console.log('effect a App')
@@ -28,14 +29,13 @@ function App() {
     function handleFilterChange(e){
         let valor = e.target.value
         setFilter(valor)
+        setPaisShow([])
         if (valor !== ''){
             let paisosTrobats = countries.filter(c => c.name.common.toUpperCase().startsWith(valor.toUpperCase()))
             setFilterResult(paisosTrobats)
         }else{
             setFilterResult([])
         }
-
-
     }
 
     function renderSwitch (fr){
@@ -52,22 +52,35 @@ function App() {
                     <p>Population: {pais.population}</p>
                     <h3>Languages</h3>
                     <ul>{idiomes.map(pa => <li key={pa}>{pa}</li>)}</ul>
-                    <img width="300px"  key="bandera" src={pais.flags.svg} />
+                    <img width="200px"  key="bandera" src={pais.flags.svg} />
                 </Fragment>
             )
 
         }else {
-            return fr.map(c =>  <div key={c.name.common}>{c.name.common}</div> )
+
+            return fr.map(c =>
+                <Fragment>
+                    <div key={c.name.common}>
+                        {c.name.common} <button type="text" value={c.name.common} onClick={seleccionarPais} name="veurePaisBt">Show</button>
+                    </div>
+                </Fragment>
+            )
         }
+    }
+
+    function seleccionarPais(e){
+        e.preventDefault()
+        setPaisShow(filterResult.filter(pclick => pclick.name.common === e.target.value))
     }
 
   return (
     <>
         <div>
-            <h1>Exercici 2.12</h1>
+            <h1>Exercici 2.13</h1>
             <h2>Search countries <input type="text" value={filter} onChange={handleFilterChange} /></h2>
         </div>
         <div>{renderSwitch(filterResult)}</div>
+        <div>{renderSwitch(paisShow)}</div>
     </>
   )
 }
