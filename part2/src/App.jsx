@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import Note from "../components/Note.jsx";
+import noteService from './services/notes.jsx'
 
 const App = () => {
     const [notes, setNotes] = useState([])
@@ -11,12 +12,7 @@ const App = () => {
         const note = notes.find(n => n.id === id)
         const noteObj = {...note, important: !note.important}
 
-        fetch(`http://localhost:3001/notes/${id}`,{
-            method: 'PUT',
-            body: JSON.stringify(noteObj),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-            .then(response => response.json())
+        noteService.update(id, noteObj)
             .then(data => {
                 //Actualitzam el llistat de notes
                 setNotes(notes.map(n => n.id !== id ? n : data))
@@ -29,10 +25,8 @@ const App = () => {
     useEffect(() => {
         console.log('effect a app')
 
-        fetch('http://localhost:3001/notes')
-            .then(response =>  response.json())
+        noteService.getAll()
             .then(data => {
-                console.log(data)
                 setNotes(data)
             })
     }, [])
@@ -49,12 +43,7 @@ const App = () => {
         }
 
         //Enviam la nova nota amb POST al servidor
-        fetch('http://localhost:3001/notes', {
-            method: 'POST',
-            body: JSON.stringify(noteObj),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-            .then(response => response.json())
+        noteService.create(noteObj)
             .then(data => {
                 console.log(data)
                 //Com ha anat bé, actualitzam els estats del llistat de notes i de nova nota
