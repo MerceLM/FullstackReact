@@ -24,8 +24,4 @@ const update = (id, newNote) =>{
    return request.then(response => response.json())
 }
 
-export default {
-    getAll: getAll,
-    create: create,
-    update: update
-}
+export default { getAll, create, update }
