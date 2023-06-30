@@ -6,6 +6,25 @@ const App = () => {
     const [newNote, setNewNote] = useState('Afegir nova nota...')
     const [showAll, setShowAll] = useState(true)
 
+    const toggleImportanceOf = (id) => {
+        console.log(`Importance of ${id} needs to be toggled`)
+        const note = notes.find(n => n.id === id)
+        const noteObj = {...note, important: !note.important}
+
+        fetch(`http://localhost:3001/notes/${id}`,{
+            method: 'PUT',
+            body: JSON.stringify(noteObj),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => response.json())
+            .then(data => {
+                //Actualitzam el llistat de notes
+                setNotes(notes.map(n => n.id !== id ? n : data))
+            })
+
+
+    }
+
     //Agafam dades del servidor amb el primer renderitzat i les guardam a l'estat
     useEffect(() => {
         console.log('effect a app')
@@ -61,7 +80,11 @@ const App = () => {
             </div>
             <ul>
                 {notesToShow.map(note =>
-                    <Note key={note.id} note={note} />
+                    <Note
+                        key={note.id}
+                        note={note}
+                        toggleImportance={() => toggleImportanceOf(note.id)}
+                    />
                 )}
             </ul>
             <form onSubmit={addNote}>
