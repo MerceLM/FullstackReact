@@ -1,14 +1,16 @@
 import {Fragment, useEffect, useState} from 'react'
 import './App.css'
+import process from "../.eslintrc.cjs";
 
 function App() {
     const [countries, setCountries] = useState([])
     const [filterResult, setFilterResult] = useState([])
     const [filter, setFilter] = useState('')
     const [paisShow, setPaisShow] = useState([])
+    const [countryWeather, setCountryWeather] = useState('')
 
     useEffect(() => {
-        console.log('effect a App')
+        console.log('effect països a App')
 
         /*
         **** Fem la crida async / await perque hem d'esperar
@@ -26,10 +28,31 @@ function App() {
     }, [])
     console.log('rendered ', countries.length, ' countries')
 
+    function getWeather(nomPais){
+        console.log('effect temps de un país a App')
+
+        /*
+        **** Fem la crida async / await perque hem d'esperar
+        **** a tenir totes les dades de la resposta
+         */
+        const fetchData = async () => {
+            const apiKey = process.env.REACT_APP_API_WEATHERSTACK_KEY
+            const response = await fetch(`http://api.weatherstack.com/current?access_key=${apiKey}&query=${nomPais}`)
+            const newData = await response.json()
+            console.log(newData)
+            setCountryWeather(newData)
+        }
+
+        fetchData()
+
+    }
+    console.log('rendered ', countryWeather.length, ' weather')
+
     function handleFilterChange(e){
         let valor = e.target.value
         setFilter(valor)
         setPaisShow([])
+        setCountryWeather('')
         if (valor !== ''){
             let paisosTrobats = countries.filter(c => c.name.common.toUpperCase().startsWith(valor.toUpperCase()))
             setFilterResult(paisosTrobats)
@@ -53,6 +76,9 @@ function App() {
                     <h3>Languages</h3>
                     <ul>{idiomes.map(pa => <li key={pa}>{pa}</li>)}</ul>
                     <img alt="flag" width="200px"  key="bandera" src={pais.flags.svg} />
+                    <h3>Weather in {pais.name.common}</h3>
+
+
                 </Fragment>
             )
 
@@ -70,12 +96,13 @@ function App() {
     function seleccionarPais(e){
         e.preventDefault()
         setPaisShow(filterResult.filter(pclick => pclick.name.common === e.target.value))
+        getWeather(e.target.value)
     }
 
   return (
     <>
         <div>
-            <h1>Exercici 2.13</h1>
+            <h1>Exercici 2.14</h1>
             <h2>Search countries <input type="text" value={filter} onChange={handleFilterChange} /></h2>
         </div>
         <div>{renderSwitch(filterResult)}</div>
