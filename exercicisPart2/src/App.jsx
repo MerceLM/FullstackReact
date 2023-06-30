@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Filter from "./components/Filter.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Persons from "./components/Persons.jsx";
+import personsService from "./services/persons.jsx";
 
 const App = () => {
     const [ persons, setPersons ] = useState([ ])
@@ -42,9 +43,13 @@ const App = () => {
                 name: newName,
                 number: newNumber
             }
-            setPersons(persons.concat(newNameObj))
-            setNewName('')
-            setNewNumber('')
+
+            personsService.createPerson(newNameObj)
+                .then(data => {
+                    setPersons(persons.concat(data))
+                    setNewName('')
+                    setNewNumber('')
+                })
         }
     }
 
