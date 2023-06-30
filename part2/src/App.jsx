@@ -21,15 +21,27 @@ const App = () => {
 
     const addNote = (e) => {
         e.preventDefault()
+
+        //Preparam les dades de la nova nota
         const noteObj = {
             content: newNote,
             date: new Date().toISOString(),
             important: Math.random() < 0.5,
-            id: notes.length + 1
         }
 
-        setNotes(notes.concat(noteObj))
-        setNewNote('')
+        //Enviam la nova nota amb POST al servidor
+        fetch('http://localhost:3001/notes', {
+            method: 'POST',
+            body: JSON.stringify(noteObj),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                //Com ha anat bé, actualitzam els estats del llistat de notes i de nova nota
+                setNotes(notes.concat(data))
+                setNewNote('')
+            })
     }
 
     const handleNoteChange = e => {
@@ -42,7 +54,7 @@ const App = () => {
 
     return (
         <div>
-            <p>Part 2b. Fins exercicis 2.6-2.10</p>
+            <p>Part 2d</p>
             <h1>Notes</h1>
             <div>
                 <button onClick={() => setShowAll(!showAll)}>Show {showAll? 'only important notes' : 'all notes' }</button>
