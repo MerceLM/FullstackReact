@@ -53,6 +53,18 @@ const App = () => {
         }
     }
 
+    const deletePersonOf = (id) => {
+
+        if (persons.find(p => p.id === id)){
+            personsService.deletePerson(id)
+                .then(data => {
+                    setPersons(persons.filter(p => p.id !== id))
+                })
+        }else{
+            alert (`El contacte no es troba a l'agenda i no se pot eliminar`)
+        }
+    }
+
     return (
         <div>
             <h2>Phonebook</h2>
@@ -60,7 +72,9 @@ const App = () => {
             <h2>Add a new</h2>
             <PersonForm newName={newName} handleChangeName={handleChangeName} newNumber={newNumber} handleChangeNumber={handleChangeNumber} addNewPerson={addNewPerson} />
             <h2>Numbers</h2>
-            <Persons persons={persons} filterName={filterName} />
+            {persons.map(p =>
+                <Persons person={p} filterName={filterName} deletePerson={() => deletePersonOf(p.id)} />
+            )}
         </div>
     )
 }

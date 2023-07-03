@@ -1,10 +1,9 @@
 import React from "react";
 
-const Persons = (props) => {
+const Persons = ({person, filterName, deletePerson}) => {
+
     return (
-        props.persons.map(p =>
-            p.name.toUpperCase().startsWith(props.filterName.toUpperCase()) && <div key={p.name}>{p.name} {p.number}</div>
-        )
+        person.name.toUpperCase().startsWith(filterName.toUpperCase()) && <div key={person.name}>{person.name} {person.number} <button key={person.id} onClick={deletePerson}>Delete</button></div>
     )
 }
 

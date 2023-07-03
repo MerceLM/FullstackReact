@@ -11,4 +11,12 @@ const createPerson = newPerson => {
 
 }
 
-export default {createPerson}
+const deletePerson = id => {
+    const request = fetch(`${baseUrl}/${id}`, {
+        method: 'DELETE',
+        headers: {"Content-type": "application/json; charset=UTF-8"}
+    })
+    return request.then(response => response.json())
+}
+
+export default {createPerson, deletePerson}
