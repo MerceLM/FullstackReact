@@ -35,15 +35,23 @@ const App = () => {
     const addNewPerson = e => {
         e.preventDefault()
 
-       if (persons.find(p => p.name.toUpperCase() === newName.toUpperCase()) ) {
-           alert(`${newName} is already added to phonebook`)
+        const newNameObj = {
+            name: newName,
+            number: newNumber
+        }
 
+        let personaExistent = persons.find(p => p.name.toUpperCase() === newName.toUpperCase())
+        if (personaExistent) {
+          if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+              newNameObj.id = personaExistent.id
+              personsService.updatePerson(newNameObj)
+                  .then(data => {
+                      setPersons(persons.map(p => p.id !== personaExistent.id ? p : data))
+                      setNewName('')
+                      setNewNumber('')
+                  })
+          }
        }else {
-            const newNameObj = {
-                name: newName,
-                number: newNumber
-            }
-
             personsService.createPerson(newNameObj)
                 .then(data => {
                     setPersons(persons.concat(data))
@@ -73,7 +81,7 @@ const App = () => {
             <PersonForm newName={newName} handleChangeName={handleChangeName} newNumber={newNumber} handleChangeNumber={handleChangeNumber} addNewPerson={addNewPerson} />
             <h2>Numbers</h2>
             {persons.map(p =>
-                <Persons person={p} filterName={filterName} deletePerson={() => deletePersonOf(p.id)} />
+                <Persons key={p.id} person={p} filterName={filterName} deletePerson={() => deletePersonOf(p.id)} />
             )}
         </div>
     )
