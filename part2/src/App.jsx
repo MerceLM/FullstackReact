@@ -1,14 +1,15 @@
 import {useEffect, useState} from "react";
 import Note from "../components/Note.jsx";
 import noteService from './services/notes.jsx'
+import Notification from "../components/Notification.jsx";
 
 const App = () => {
     const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('Afegir nova nota...')
     const [showAll, setShowAll] = useState(true)
+    const [errorMessage, setErrorMessage] = useState('Some error happened...')
 
     const toggleImportanceOf = (id) => {
-        console.log(`Importance of ${id} needs to be toggled`)
         const note = notes.find(n => n.id === id)
         const noteObj = {...note, important: !note.important}
 
@@ -18,7 +19,10 @@ const App = () => {
                 setNotes(notes.map(n => n.id !== id ? n : data))
             })
             .catch(error => {
-                alert(`The note ${note.content} was already deleted from server`)
+                setErrorMessage(`Note ${note.content} was already removed from server`)
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000)
                 setNotes(notes.filter(n => n.id !== id))
             })
 
@@ -66,8 +70,9 @@ const App = () => {
 
     return (
         <div>
-            <p>Part 2d</p>
-            <h1>Notes</h1>
+            <p>Part 2e</p>
+            <h1 className="note">Notes</h1>
+            <Notification missatge={errorMessage} />
             <div>
                 <button onClick={() => setShowAll(!showAll)}>Show {showAll? 'only important notes' : 'all notes' }</button>
             </div>
