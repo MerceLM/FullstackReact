@@ -3,12 +3,14 @@ import Filter from "./components/Filter.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Persons from "./components/Persons.jsx";
 import personsService from "./services/persons.jsx";
+import Error from "./components/Error.jsx";
 
 const App = () => {
     const [ persons, setPersons ] = useState([ ])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ filterName, setFilterName ] = useState('')
+    const [ successOp, setSuccessOp ] = useState('')
 
     useEffect(() => {
         console.log('effect a App')
@@ -49,6 +51,10 @@ const App = () => {
                       setPersons(persons.map(p => p.id !== personaExistent.id ? p : data))
                       setNewName('')
                       setNewNumber('')
+                      setSuccessOp(`${personaExistent.name}  updated`)
+                      setTimeout(() => {
+                          setSuccessOp(null)
+                      }, 5000)
                   })
           }
        }else {
@@ -57,6 +63,10 @@ const App = () => {
                     setPersons(persons.concat(data))
                     setNewName('')
                     setNewNumber('')
+                    setSuccessOp(`${newNameObj.name}  created`)
+                    setTimeout(() => {
+                        setSuccessOp(null)
+                    }, 5000)
                 })
         }
     }
@@ -76,6 +86,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Error missatge={successOp} />
             <Filter filterName={filterName} handleChangeFilterName={handleChangeFilterName} />
             <h2>Add a new</h2>
             <PersonForm newName={newName} handleChangeName={handleChangeName} newNumber={newNumber} handleChangeNumber={handleChangeNumber} addNewPerson={addNewPerson} />
