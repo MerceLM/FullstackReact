@@ -1,16 +1,22 @@
-const Error = ({ missatge }) => {
-    const errorStyle = {
+const Error = ({ missatge, error }) => {
+    const okStyle = {
         color: 'green',
         backgroundColor: 'lightgrey',
         border: 'green',
         fontStyle: 'italic'
     }
 
+    const errorStyle = {
+        color: 'red',
+        backgroundColor: 'lightgrey',
+        border: 'red'
+    }
+
     if (missatge === null)
         return null
 
     return (
-        <div style={errorStyle}>{missatge}</div>
+        <div style={error? errorStyle : okStyle}>{missatge}</div>
     )
 }
 
