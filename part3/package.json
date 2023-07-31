@@ -1,0 +1,27 @@
+{
+  "name": "part3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerceLM/FullstackReact.git"
+  },
+  "author": "MLM",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MerceLM/FullstackReact/issues"
+  },
+  "homepage": "https://github.com/MerceLM/FullstackReact#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

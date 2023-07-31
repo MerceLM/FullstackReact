@@ -1,5 +1,10 @@
 const baseUrl = 'http://localhost:3001/persons'
 
+const getAllPersons = () => {
+    const request = fetch(baseUrl)
+    return request.then(response => response.json())
+}
+
 const createPerson = newPerson => {
     //Enviam la nova persona amb POST al servidor
     const request = fetch(baseUrl, {
@@ -8,7 +13,6 @@ const createPerson = newPerson => {
         headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     return request.then(response => response.json())
-
 }
 
 const updatePerson = newPerson => {
@@ -17,6 +21,7 @@ const updatePerson = newPerson => {
         body: JSON.stringify(newPerson),
         headers: {"Content-type": "application/json; charset=UTF-8"}
     })
+
     return request.then(response => response.json())
 }
 
@@ -28,4 +33,4 @@ const deletePerson = id => {
     return request.then(response => response.json())
 }
 
-export default {createPerson, deletePerson, updatePerson}
+export default {getAllPersons, createPerson, deletePerson, updatePerson}

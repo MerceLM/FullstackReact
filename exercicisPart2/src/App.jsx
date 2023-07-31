@@ -3,23 +3,30 @@ import Filter from "./components/Filter.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Persons from "./components/Persons.jsx";
 import personsService from "./services/persons.jsx";
+import Error from "./components/Error.jsx";
 
 const App = () => {
     const [ persons, setPersons ] = useState([ ])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ filterName, setFilterName ] = useState('')
+    const [ successOp, setSuccessOp ] = useState('')
+    const [ errorOp, setErrorOp ] = useState('')
+    const [ isErrorOp, setIsErrorOp ] = useState(false)
 
     useEffect(() => {
         console.log('effect a App')
-        fetch('http://localhost:3001/persons')
-            .then(response => response.json())
+        getAll()
+    }, [])
+    console.log('render ', persons.length, ' persons')
+
+    const getAll = () =>{
+        personsService.getAllPersons()
             .then(data => {
                 console.log('data: ', data)
                 setPersons(data)
             })
-    }, [])
-    console.log('render ', persons.length, ' persons')
+    }
 
     const handleChangeFilterName = (e) => {
         setFilterName(e.target.value)
@@ -46,9 +53,23 @@ const App = () => {
               newNameObj.id = personaExistent.id
               personsService.updatePerson(newNameObj)
                   .then(data => {
-                      setPersons(persons.map(p => p.id !== personaExistent.id ? p : data))
-                      setNewName('')
-                      setNewNumber('')
+                      if (!data.ok){
+                          setSuccessOp(`Information of ${newNameObj.name} has already been removed from server. Reloading list...`)
+                          setIsErrorOp(true)
+                          setTimeout(() => {
+                              setSuccessOp(null)
+                          }, 3000)
+                          getAll()
+                      }else {
+                          setPersons(persons.map(p => p.id !== personaExistent.id ? p : data))
+                          setNewName('')
+                          setNewNumber('')
+                          setSuccessOp(`${personaExistent.name}  updated`)
+                          setIsErrorOp(false)
+                          setTimeout(() => {
+                              setSuccessOp(null)
+                          }, 3000)
+                      }
                   })
           }
        }else {
@@ -57,12 +78,16 @@ const App = () => {
                     setPersons(persons.concat(data))
                     setNewName('')
                     setNewNumber('')
+                    setSuccessOp(`${newNameObj.name}  created`)
+                    setIsErrorOp(false)
+                    setTimeout(() => {
+                        setSuccessOp(null)
+                    }, 3000)
                 })
         }
     }
 
     const deletePersonOf = (id) => {
-
         if (persons.find(p => p.id === id)){
             personsService.deletePerson(id)
                 .then(data => {
@@ -76,6 +101,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Error missatge={successOp} error={isErrorOp} />
             <Filter filterName={filterName} handleChangeFilterName={handleChangeFilterName} />
             <h2>Add a new</h2>
             <PersonForm newName={newName} handleChangeName={handleChangeName} newNumber={newNumber} handleChangeNumber={handleChangeNumber} addNewPerson={addNewPerson} />
